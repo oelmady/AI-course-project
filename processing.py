@@ -39,11 +39,9 @@ if os.path.exists(admissions_file):
     print(f"Modified admissions.csv to keep only required columns. New shape: {admissions_df.shape}")
     
 # Merge patients and admissions
-
-# Merge with admissions
 merged_df = pd.merge(patients_df, admissions_df, on='subject_id', how='inner')
 
 # Save the merged DataFrame
-merged_file = os.path.join(dataset_path, 'merged_patients_admissions.csv')
+merged_file = os.path.join(dataset_path, 'demographics.csv')
 merged_df.to_csv(merged_file, index=False)
 print(f"Merged patients and admissions. Saved to {merged_file}. New shape: {merged_df.shape}")
