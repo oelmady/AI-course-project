@@ -17,5 +17,4 @@ env/
 .DS_Store
 
 # diagnoses csv file is too big to be uploaded to GitHub
-# Must run the preprocessing script to generate the csv files
-*.csv
+Data/diagnoses_icd.csv
