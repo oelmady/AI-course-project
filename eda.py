@@ -1,3 +1,8 @@
+# Step 3 of the data processing pipeline
+# The script reads the demographics.csv file and performs exploratory data analysis (EDA) to understand the data better. It includes summary statistics, missing values analysis, unique values in categorical columns, and analysis of demographics and diagnoses data.
+# This step helps identify patterns, trends, and potential issues in the data.
+
+
 import pandas as pd
 import os
 
@@ -10,9 +15,12 @@ diagnoses_path = os.path.join(dataset_path, "diagnoses_icd.csv")
 if os.path.exists(demographics_path):
     demographics_df = pd.read_csv(demographics_path)
 else: 
-    raise FileNotFoundError(f"Demographics file not found at {demographics_path}")
+    raise FileNotFoundError(f"Demographics file not found at {demographics_path}. Try running the demographics.py script first.")
 
-diagnoses_df = pd.read_csv(diagnoses_path)
+if os.path.exsts(diagnoses_path):
+    diagnoses_df = pd.read_csv(diagnoses_path)
+else: 
+    raise FileNotFoundError(f"Diagnoses file not found at {diagnoses_path}. Try running the icd_eda.py script first.")
 
 # Summary statistics
 print("\nDemographics Summary Statistics:")
@@ -75,22 +83,28 @@ print(race_counts)
 # Diagnoses analysis
 print("\n--- Diagnoses Analysis ---")
 
-# Count of diagnoses per patient
-diagnoses_per_patient = diagnoses_df.groupby('subject_id').size()
-print("\nDiagnoses per Patient Statistics:")
-print(diagnoses_per_patient.describe())
+# ICD version counts
+icd_counts = diagnoses_df['icd_version'].value_counts()
+print("\nICD Version Counts:")
+print(icd_counts)
 
 # Top 10 most common ICD codes
 icd_counts = diagnoses_df['icd_code'].value_counts().head(10)
 print("\nTop 10 Most Common ICD Codes:")
 print(icd_counts)
 
-# Correlation between demographics and diagnoses (if possible)
-
-print("\nPatients with diagnoses recorded:")
 patients_with_diagnoses = len(diagnoses_df['subject_id'].unique())
-total_patients = len(demographics_df['subject_id'].unique())
-print(f"Number of patients with diagnoses: {patients_with_diagnoses}")
-print(f"Total number of patients: {total_patients}")
-print(f"Percentage: {(patients_with_diagnoses/total_patients)*100:.2f}%")
+print(f"Number of patients: {patients_with_diagnoses}")
 
+# Average number of diagnoses per patient
+diagnoses_per_patient = diagnoses_df['subject_id'].value_counts()
+average_diagnoses_per_patient = diagnoses_per_patient.mean()
+print(f"\nAverage number of diagnoses per patient: {average_diagnoses_per_patient:.2f}")
+
+# Median number of diagnoses per patient
+median_diagnoses_per_patient = diagnoses_per_patient.median()
+print(f"Median number of diagnoses per patient: {median_diagnoses_per_patient:.2f}")
+
+# Mode number of diagnoses per patient
+mode_diagnoses_per_patient = diagnoses_per_patient.mode()[0]
+print(f"Mode number of diagnoses per patient: {mode_diagnoses_per_patient:.2f}")

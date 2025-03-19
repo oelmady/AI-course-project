@@ -1,3 +1,7 @@
+# Step 1 of the data processing pipeline
+# This script unzips the CSV files in the Data folder and merges the patients and admissions data into a single CSV file, demographics.csv
+
+
 import os
 import pandas as pd
 
@@ -23,10 +27,6 @@ if os.path.exists(patients_file):
     patients_df = pd.read_csv(patients_file, low_memory=False)
     # Keep only required columns
     patients_df = patients_df[['subject_id', 'gender']]
-    # Save back to the original file
-    patients_df.to_csv(patients_file, index=False)
-    print(f"Modified patients.csv to keep only subject_id and gender. New shape: {patients_df.shape}")
-    
     
 # Load admissions.csv and keep only required columns
 admissions_file = os.path.join(dataset_path, 'admissions.csv')
@@ -34,10 +34,7 @@ if os.path.exists(admissions_file):
     admissions_df = pd.read_csv(admissions_file, low_memory=False)
     # Keep only required columns
     admissions_df = admissions_df[['subject_id', 'insurance', 'language', 'marital_status', 'race']]
-    # Save back to the original file
-    admissions_df.to_csv(admissions_file, index=False)
-    print(f"Modified admissions.csv to keep only required columns. New shape: {admissions_df.shape}")
-    
+   
 # Merge patients and admissions
 merged_df = pd.merge(patients_df, admissions_df, on='subject_id', how='inner')
 
