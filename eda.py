@@ -2,7 +2,6 @@
 # The script reads the demographics.csv file and performs exploratory data analysis (EDA) to understand the data better. It includes summary statistics, missing values analysis, unique values in categorical columns, and analysis of demographics and diagnoses data.
 # This step helps identify patterns, trends, and potential issues in the data.
 
-
 import pandas as pd
 import os
 
@@ -17,7 +16,7 @@ if os.path.exists(demographics_path):
 else: 
     raise FileNotFoundError(f"Demographics file not found at {demographics_path}. Try running the demographics.py script first.")
 
-if os.path.exsts(diagnoses_path):
+if os.path.exists(diagnoses_path):
     diagnoses_df = pd.read_csv(diagnoses_path)
 else: 
     raise FileNotFoundError(f"Diagnoses file not found at {diagnoses_path}. Try running the icd_eda.py script first.")
@@ -98,6 +97,7 @@ print(f"Number of patients: {patients_with_diagnoses}")
 
 # Average number of diagnoses per patient
 diagnoses_per_patient = diagnoses_df['subject_id'].value_counts()
+
 average_diagnoses_per_patient = diagnoses_per_patient.mean()
 print(f"\nAverage number of diagnoses per patient: {average_diagnoses_per_patient:.2f}")
 
@@ -108,3 +108,11 @@ print(f"Median number of diagnoses per patient: {median_diagnoses_per_patient:.2
 # Mode number of diagnoses per patient
 mode_diagnoses_per_patient = diagnoses_per_patient.mode()[0]
 print(f"Mode number of diagnoses per patient: {mode_diagnoses_per_patient:.2f}")
+
+# Generate a histogram of the patient diiagnoses
+import matplotlib.pyplot as plt
+plt.hist(diagnoses_per_patient, bins=range(1, 20), color='skyblue', edgecolor='black', linewidth=1.2)
+plt.xlabel('Number of Diagnoses per Patient')
+plt.ylabel('Number of Patients')
+plt.title('Distribution of Diagnoses per Patient')
+plt.show()  # Display the histogram

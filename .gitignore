@@ -18,3 +18,5 @@ env/
 
 # diagnoses csv file is too big to be uploaded to GitHub
 Data/diagnoses_icd.csv
+Data/admissions.csv
+Data/patients.csv

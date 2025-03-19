@@ -18,7 +18,7 @@ By focusing on high precision, we aim to minimize false positives, ensuring that
 We have three primary research questions:
 
 1. Can we accurately predict cases of suspected undiagnosed mental illness using structured EMR data from MIMIC-IV?
-2. Which clinical and SDOH factors contribute most to the risk of being undiagnosed?
+2. Which clinical diagnoses contribute most to the risk of being undiagnosed?
 3. Are there systematic disparities (e.g., by race, insurance type, language barriers) in the likelihood of being undiagnosed?
 
 In order to answer these questions, we need access to protected health information.

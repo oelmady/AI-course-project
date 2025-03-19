@@ -38,6 +38,9 @@ if os.path.exists(admissions_file):
 # Merge patients and admissions
 merged_df = pd.merge(patients_df, admissions_df, on='subject_id', how='inner')
 
+# Drop duplicate rows based on subject_id
+merged_df = merged_df.drop_duplicates(subset='subject_id')
+
 # Save the merged DataFrame
 merged_file = os.path.join(dataset_path, 'demographics.csv')
 merged_df.to_csv(merged_file, index=False)
