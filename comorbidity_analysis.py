@@ -104,3 +104,4 @@ if __name__ == "__main__":
     # Example: Analyze comorbidities for a specific ICD Category
     
     analyze_comorbidities_and_demographics("I10")  # Example: Hypertension
+    analyze_comorbidities_and_demographics("F30") 

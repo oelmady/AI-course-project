@@ -6,6 +6,7 @@ import pandas as pd
 import os
 
 dataset_path = "Data"
+
 # Check if the files exist
 demographics_path = os.path.join(dataset_path, "demographics.csv")
 diagnoses_path = os.path.join(dataset_path, "diagnoses_icd.csv")
