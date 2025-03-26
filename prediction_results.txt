@@ -1,0 +1,166 @@
+
+=== Comprehensive Evaluation for exact ICD code: I10 ===
+Building prediction model for ICD code: I10
+Patients with I10 diagnosis: 2203
+Patients without I10 diagnosis: 8115
+Using a representative sample of 2000 patients
+Computing patient similarities...
+Building patient similarity network...
+Network built with 2000 patients and 361837 connections
+
+Fold 1/5
+  AUC-ROC: 0.882
+  PR-AUC: 0.680
+  Accuracy: 0.828
+  F1 Score: 0.566
+
+Fold 2/5
+  AUC-ROC: 0.910
+  PR-AUC: 0.732
+  Accuracy: 0.850
+  F1 Score: 0.625
+
+Fold 3/5
+  AUC-ROC: 0.837
+  PR-AUC: 0.577
+  Accuracy: 0.792
+  F1 Score: 0.478
+
+Fold 4/5
+  AUC-ROC: 0.889
+  PR-AUC: 0.604
+  Accuracy: 0.830
+  F1 Score: 0.564
+
+Fold 5/5
+  AUC-ROC: 0.865
+  PR-AUC: 0.593
+  Accuracy: 0.830
+  F1 Score: 0.547
+
+=== Overall Results ===
+Mean AUC-ROC: 0.877 ± 0.024
+Mean PR-AUC: 0.637 ± 0.059
+Mean Accuracy: 0.826 ± 0.019
+Mean F1 Score: 0.556 ± 0.047
+
+Classification Report (threshold=0.5):
+              precision    recall  f1-score   support
+
+           0       0.87      0.91      0.89      1573
+           1       0.61      0.51      0.56       427
+
+    accuracy                           0.83      2000
+   macro avg       0.74      0.71      0.72      2000
+weighted avg       0.82      0.83      0.82      2000
+
+
+Analyzing most significant comorbidities...
+Top 10 Most Significant Comorbidities:
+ICD Code: E785, Chi2: 2309.81, p-value: 0.00000
+ICD Code: E119, Chi2: 981.00, p-value: 0.00000
+ICD Code: Z87891, Chi2: 842.42, p-value: 0.00000
+ICD Code: K219, Chi2: 766.77, p-value: 0.00000
+ICD Code: I2510, Chi2: 487.78, p-value: 0.00000
+ICD Code: G4733, Chi2: 350.60, p-value: 0.00000
+ICD Code: D62, Chi2: 333.43, p-value: 0.00000
+ICD Code: Z7902, Chi2: 311.31, p-value: 0.00000
+ICD Code: N179, Chi2: 306.16, p-value: 0.00000
+ICD Code: E669, Chi2: 305.87, p-value: 0.00000
+
+Prevalence Analysis for Top Comorbidities:
+ICD: E785, Target: 55.56%, Non-Target: 9.77%, Ratio: 5.69x
+ICD: E119, Target: 20.52%, Non-Target: 2.34%, Ratio: 8.76x
+ICD: Z87891, Target: 32.41%, Non-Target: 8.50%, Ratio: 3.81x
+ICD: K219, Target: 28.73%, Non-Target: 7.25%, Ratio: 3.97x
+ICD: I2510, Target: 19.47%, Non-Target: 5.00%, Ratio: 3.89x
+ICD: G4733, Target: 12.39%, Non-Target: 2.76%, Ratio: 4.49x
+ICD: D62, Target: 14.98%, Non-Target: 4.18%, Ratio: 3.59x
+ICD: Z7902, Target: 12.12%, Non-Target: 2.96%, Ratio: 4.10x
+ICD: N179, Target: 17.75%, Non-Target: 6.01%, Ratio: 2.95x
+ICD: E669, Target: 13.39%, Non-Target: 3.64%, Ratio: 3.68x
+
+=== Comprehensive Evaluation for exact ICD code: E119 ===
+Building prediction model for ICD code: E119
+Patients with E119 diagnosis: 642
+Patients without E119 diagnosis: 9676
+Using a representative sample of 2000 patients
+Computing patient similarities...
+Building patient similarity network...
+Network built with 2000 patients and 214291 connections
+
+Fold 1/5
+  AUC-ROC: 0.802
+  PR-AUC: 0.204
+  Accuracy: 0.940
+  F1 Score: 0.077
+
+Fold 2/5
+  AUC-ROC: 0.794
+  PR-AUC: 0.152
+  Accuracy: 0.935
+  F1 Score: 0.000
+
+Fold 3/5
+  AUC-ROC: 0.836
+  PR-AUC: 0.294
+  Accuracy: 0.940
+  F1 Score: 0.077
+
+Fold 4/5
+  AUC-ROC: 0.765
+  PR-AUC: 0.145
+  Accuracy: 0.930
+  F1 Score: 0.000
+
+Fold 5/5
+  AUC-ROC: 0.759
+  PR-AUC: 0.123
+  Accuracy: 0.940
+  F1 Score: 0.000
+
+=== Overall Results ===
+Mean AUC-ROC: 0.791 ± 0.028
+Mean PR-AUC: 0.184 ± 0.061
+Mean Accuracy: 0.937 ± 0.004
+Mean F1 Score: 0.031 ± 0.038
+
+Classification Report (threshold=0.5):
+              precision    recall  f1-score   support
+
+           0       0.94      1.00      0.97      1876
+           1       0.33      0.02      0.03       124
+
+    accuracy                           0.94      2000
+   macro avg       0.64      0.51      0.50      2000
+weighted avg       0.90      0.94      0.91      2000
+
+
+Analyzing most significant comorbidities...
+Analyzing predictive comorbidities for ICD code: E119
+Found 642 patients with exact E119 diagnosis
+Target patients: 642, Non-target patients: 9676
+
+Top 10 Most Significant Comorbidities:
+ICD Code: I10, Chi2: 981.00, p-value: 0.00000
+ICD Code: E785, Chi2: 848.84, p-value: 0.00000
+ICD Code: Z794, Chi2: 702.66, p-value: 0.00000
+ICD Code: Z7984, Chi2: 596.23, p-value: 0.00000
+ICD Code: I2510, Chi2: 275.37, p-value: 0.00000
+ICD Code: I110, Chi2: 269.34, p-value: 0.00000
+ICD Code: E1165, Chi2: 246.77, p-value: 0.00000
+ICD Code: K219, Chi2: 237.06, p-value: 0.00000
+ICD Code: Z87891, Chi2: 219.50, p-value: 0.00000
+ICD Code: E669, Chi2: 184.04, p-value: 0.00000
+
+Prevalence Analysis for Top Comorbidities:
+ICD: I10, Target: 70.40%, Non-Target: 18.10%, Ratio: 3.89x
+ICD: E785, Target: 63.71%, Non-Target: 16.62%, Ratio: 3.83x
+ICD: Z794, Target: 24.77%, Non-Target: 2.91%, Ratio: 8.50x
+ICD: Z7984, Target: 11.37%, Non-Target: 0.53%, Ratio: 21.57x
+ICD: I2510, Target: 25.39%, Non-Target: 6.95%, Ratio: 3.66x
+ICD: I110, Target: 14.80%, Non-Target: 2.66%, Ratio: 5.57x
+ICD: E1165, Target: 11.68%, Non-Target: 1.82%, Ratio: 6.42x
+ICD: K219, Target: 30.84%, Non-Target: 10.57%, Ratio: 2.92x
+ICD: Z87891, Target: 33.02%, Non-Target: 12.32%, Ratio: 2.68x
+ICD: E669, Target: 17.76%, Non-Target: 4.92%, Ratio: 3.61x

@@ -1,7 +1,5 @@
 # Step 1 of the data processing pipeline
 # This script unzips the CSV files in the Data folder and merges the patients and admissions data into a single CSV file, demographics.csv
-
-
 import os
 import pandas as pd
 
