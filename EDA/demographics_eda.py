@@ -5,11 +5,9 @@
 import pandas as pd
 import os
 
-dataset_path = "Data"
-
 # Check if the files exist
-demographics_path = os.path.join(dataset_path, "demographics.csv")
-diagnoses_path = os.path.join(dataset_path, "diagnoses_icd.csv")
+demographics_path = "Data/demographics.csv"
+diagnoses_path = "Data/diagnoses_icd.csv"
 
 # Load the data
 if os.path.exists(demographics_path):

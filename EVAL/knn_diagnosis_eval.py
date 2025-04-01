@@ -3,9 +3,16 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import (roc_auc_score, precision_recall_curve, auc,
-                           confusion_matrix, classification_report,
-                           accuracy_score, f1_score)
+from sklearn.feature_selection import chi2    
+from sklearn.metrics import (
+    roc_auc_score, 
+    roc_curve, 
+    precision_recall_curve, 
+    auc,
+    confusion_matrix, 
+    classification_report,
+    accuracy_score, 
+    f1_score)
 import seaborn as sns
 import networkx as nx
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -22,9 +29,12 @@ Implements KNN-based comorbidity analysis using a graph representation approach.
 - Identifies the most predictive comorbidities using chi-square tests
 '''
 
-def build_balanced_predictor(diagnoses_df, target_icd_code, similarity_threshold=0.2, 
-                   sample_size=None, use_matrix_format=True, 
-                   class_weight=3.0):
+def build_predictor(diagnoses_df, 
+                    target_icd_code, 
+                    similarity_threshold=0.2,
+                    sample_size=None,
+                    use_matrix_format=True, 
+                    class_weight=3.0):
     """
     Builds a KNN-based comorbidity prediction model for large clinical datasets
     using a graph representation approach.
@@ -42,6 +52,7 @@ def build_balanced_predictor(diagnoses_df, target_icd_code, similarity_threshold
         non_target_patients: List of patients without the target diagnosis
     """
     print(f"Building prediction model for ICD code: {target_icd_code}")
+    # TODO: add patient demographics
     
     # Step 1: Create patient-diagnosis mapping
     patient_diagnoses = diagnoses_df.groupby('subject_id')['icd_code'].apply(set).reset_index()
@@ -188,20 +199,25 @@ def predict_likelihood(G, patient_id, k=10):
     return likelihood
 
 def process_patient_batch(patient_batch, G, k):
-    """Process a batch of patients in parallel"""
+    """
+    Helper function for large-scale data processing.
+    Process a batch of patients in parallel.
+    """
     results = []
     for patient_id in patient_batch:
         likelihood = predict_likelihood(G, patient_id, k)
         results.append((patient_id, likelihood))
     return results
 
-def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10, 
-                              n_folds=5, similarity_threshold=0.1, 
-                              decision_threshold=0.3, 
-                              sample_size=None, 
-                              parallel_jobs=-1,
-                              use_matrix_format=True, 
-                              class_weight=3.0):
+def diagnosis_evaluation(diagnoses_df, 
+                         target_icd_code, k=10, 
+                         n_folds=5, 
+                         similarity_threshold=0.1, 
+                         decision_threshold=0.3, 
+                         sample_size=None, 
+                         parallel_jobs=-1,
+                         use_matrix_format=True, 
+                         class_weight=3.0):
     """
     Comprehensive evaluation of the KNN comorbidity prediction model.
     
@@ -223,7 +239,7 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
     print(f"\n=== Comprehensive Evaluation for ICD code: {target_icd_code} ===")
     
     # Build the model 
-    G, target_patients, non_target_patients = build_balanced_predictor(
+    G, target_patients, non_target_patients = build_predictor(
         diagnoses_df, target_icd_code, 
         similarity_threshold=similarity_threshold,
         sample_size=sample_size,
@@ -257,8 +273,6 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
     fold = 1
     # Perform cross-validation
     for train_idx, test_idx in skf.split(patients_array, labels_array):
-        print(f"\nFold {fold}/{n_folds}")
-        
         # Get test patients and labels for this fold
         test_patients = patients_array[test_idx].tolist()
         test_labels = labels_array[test_idx].tolist()
@@ -309,12 +323,6 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
         # Store predictions and labels for later analysis
         all_predictions.extend(predictions)
         all_true_labels.extend(test_labels)
-        
-        print(f"  AUC-ROC: {auc_score:.3f}")
-        print(f"  PR-AUC: {pr_auc:.3f}")
-        print(f"  Accuracy: {accuracy:.3f}")
-        print(f"  F1 Score: {f1:.3f}")
-        
         fold += 1
     
     # Calculate overall metrics
@@ -324,12 +332,37 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
     print(f"Mean Accuracy: {np.mean(cv_accuracy):.3f} ± {np.std(cv_accuracy):.3f}")
     print(f"Mean F1 Score: {np.mean(cv_f1_scores):.3f} ± {np.std(cv_f1_scores):.3f}")
     
-    from sklearn.metrics import roc_curve
-    fpr, tpr, _ = roc_curve(all_true_labels, all_predictions)
+    # Create binary predictions for classification report
+    binary_predictions = [1 if p >= decision_threshold else 0 for p in all_predictions]
+
+    # Return results in a dictionary
+    results = {
+        'auc_roc': np.mean(cv_auc_scores),
+        'pr_auc': np.mean(cv_pr_auc_scores),
+        'accuracy': np.mean(cv_accuracy),
+        'f1_score': np.mean(cv_f1_scores),
+        'predictions': all_predictions,
+        'true_labels': all_true_labels,
+        'binary_predictions': binary_predictions,
+    }
+    return results
+
+
+def plot_evaluation_metrics(true_labels, predictions, binary_predictions, target_icd_code):
+    """
+    Plot ROC curve and confusion matrix for model evaluation.
+    
+    Args:
+        true_labels: Array of true labels
+        predictions: Array of predicted probabilities
+        binary_predictions: Array of binary predictions
+        target_icd_code: ICD code being predicted
+    """
+    fpr, tpr, _ = roc_curve(true_labels, predictions)
     plt.figure(figsize=(10, 5))
     
     plt.subplot(1, 2, 1)
-    plt.plot(fpr, tpr, label=f'AUC = {roc_auc_score(all_true_labels, all_predictions):.3f}')
+    plt.plot(fpr, tpr, label=f'AUC = {roc_auc_score(true_labels, predictions):.3f}')
     plt.plot([0, 1], [0, 1], 'k--')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
@@ -337,8 +370,7 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
     plt.legend()
     
     # Confusion Matrix
-    binary_predictions = [1 if p >= decision_threshold else 0 for p in all_predictions]
-    cm = confusion_matrix(all_true_labels, binary_predictions)
+    cm = confusion_matrix(true_labels, binary_predictions)
     
     plt.subplot(1, 2, 2)
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
@@ -348,25 +380,6 @@ def diagnosis_evaluation(diagnoses_df, target_icd_code, k=10,
     
     plt.tight_layout()
     plt.savefig(f'evaluation_{target_icd_code}.png')
-    
-    # Classification Report
-    print("\nClassification Report:")
-    print(classification_report(all_true_labels, binary_predictions))
-    
-    # Analyze predictive comorbidities
-    print("\nAnalyzing most significant comorbidities...")
-    analyze_predictive_comorbidities(diagnoses_df, target_icd_code)
-    
-    # Return results in a dictionary
-    results = {
-        'auc_roc': np.mean(cv_auc_scores),
-        'pr_auc': np.mean(cv_pr_auc_scores),
-        'accuracy': np.mean(cv_accuracy),
-        'f1_score': np.mean(cv_f1_scores),
-        'predictions': all_predictions,
-        'true_labels': all_true_labels
-    }
-    return results
 
 def analyze_predictive_comorbidities(diagnoses_df, target_icd_code):
     """
@@ -379,7 +392,6 @@ def analyze_predictive_comorbidities(diagnoses_df, target_icd_code):
     Returns:
         DataFrame: Feature importance metrics for comorbidities
     """
-    from sklearn.feature_selection import chi2
     
     print(f"Analyzing predictive comorbidities for ICD code: {target_icd_code}")
     
@@ -487,8 +499,11 @@ def analyze_predictive_comorbidities(diagnoses_df, target_icd_code):
     
     return feature_importance
 
-def evaluate_threshold_curve(diagnoses_df, target_icd_code, k=10, 
-                           sample_size=2000, class_weight=3.0):
+def evaluate_threshold_curve(diagnoses_df, 
+                             target_icd_code, 
+                             k=11, 
+                             sample_size=2000, 
+                             class_weight=3.0):
     """
     Evaluates model performance across different decision thresholds
     to help find the optimal threshold for minimizing false negatives.
@@ -496,7 +511,7 @@ def evaluate_threshold_curve(diagnoses_df, target_icd_code, k=10,
     print(f"Evaluating threshold curve for {target_icd_code}...")
     
     # Build the model
-    G, target_patients, non_target_patients = build_balanced_predictor(
+    G, target_patients, non_target_patients = build_predictor(
         diagnoses_df, target_icd_code, 
         sample_size=sample_size,
         class_weight=class_weight
@@ -513,7 +528,7 @@ def evaluate_threshold_curve(diagnoses_df, target_icd_code, k=10,
         all_predictions.append(likelihood)
     
     # Evaluate across thresholds
-    thresholds = [0.1, 0.2, 0.3, 0.4, 0.5]
+    thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     results = []
     
     for threshold in thresholds:
@@ -537,6 +552,7 @@ def evaluate_threshold_curve(diagnoses_df, target_icd_code, k=10,
             'false_negatives': fn,
             'false_positives': fp
         })
+        
     
     # Display results
     results_df = pd.DataFrame(results)
@@ -572,14 +588,6 @@ def evaluate_threshold_curve(diagnoses_df, target_icd_code, k=10,
     plt.grid(True)
     
     plt.tight_layout()
-    plt.savefig(f'threshold_curve_{target_icd_code}.png')
-    plt.show()
-    
-    # Find threshold that minimizes false negatives while keeping acceptable precision
-    best_threshold = results_df[results_df['precision'] >= 0.3].sort_values('false_negatives').iloc[0]
-    print(f"\nRecommended threshold to minimize false negatives: {best_threshold['threshold']}")
-    print(f"At this threshold: Sensitivity: {best_threshold['sensitivity']:.2f}, Precision: {best_threshold['precision']:.2f}")
-    print(f"False Negatives: {best_threshold['false_negatives']}, False Positives: {best_threshold['false_positives']}")
     
     return results_df
 
@@ -592,16 +600,10 @@ if __name__ == "__main__":
     else:
         raise FileNotFoundError(f"Diagnoses file not found at {diagnoses_path}")
     
-    # Example: Evaluate prediction model for hypertension (code I10)
-    diagnosis_evaluation(
+    evaluate_threshold_curve(
         diagnoses_df, 
-        "I10",                  # Hypertension
-        k=10,                   # Number of neighbors
-        n_folds=5,              # Cross-validation folds
-        similarity_threshold=0.1,  # Minimum similarity for connections
-        sample_size=2000,       # Sample size for manageable computation
-        parallel_jobs=-1
+        target_icd_code='I10', 
+        k=11, 
+        sample_size=2000, 
+        class_weight=3.0
     )
-    
-    # Find the optimal threshold
-    evaluate_threshold_curve(diagnoses_df, "I10")

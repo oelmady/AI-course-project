@@ -37,7 +37,7 @@ Number of patients by diagnosis count:
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from filter import filter_excessive_diagnoses
+from EDA.filter import filter_excessive_diagnoses
 
 diagnoses_df = pd.read_csv('Data/diagnoses_icd.csv')
 diagnoses_df = filter_excessive_diagnoses(diagnoses_df, max_diagnoses=100)

@@ -1,5 +1,5 @@
 
-=== Comprehensive Evaluation for exact ICD code: I10 ===
+=== Comprehensive Evaluation for ICD code: I10 ===
 Building prediction model for ICD code: I10
 Patients with I10 diagnosis: 2203
 Patients without I10 diagnosis: 8115
