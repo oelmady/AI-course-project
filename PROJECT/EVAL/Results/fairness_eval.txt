@@ -5,7 +5,7 @@ cd /Users/omarelmady/School/AI/project/PROJECT/EVAL
 ject/PROJECT/EVAL/knn_fairness.py
 Loaded diagnoses data with 200694 records
 Loaded demographics data with 223452 records and 6 features
-
+c
 === Building Balanced Model ===
 Created balanced sample with 10043 patients
 

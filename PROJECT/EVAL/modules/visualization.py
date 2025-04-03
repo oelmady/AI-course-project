@@ -199,16 +199,6 @@ def plot_threshold_curves(results_df, target_icd_code, demographic_group=None):
         plt.grid(True)
     
     plt.tight_layout()
-    
-    # Save with appropriate name
-    if demographic_group:
-        group_col, group_val = demographic_group
-        group_val_short = str(group_val)[:5]
-        plt.savefig(f'Results/threshold_curves_{target_icd_code}_{group_col}_{group_val_short}.png')
-    else:
-        plt.savefig(f'Results/threshold_curves_{target_icd_code}.png')
-    
-    plt.close()
 
 def plot_roc_comparison(results_without_demographics, results_with_demographics, target_icd_code):
     """

@@ -30,7 +30,7 @@ def main():
     
     # Option 2: Evaluate fairness across demographic groups
     print("\n=== Evaluating Fairness Across Demographic Groups ===")
-    results, disparity_metrics = evaluate_demographic_fairness(
+    _, disparity_metrics = evaluate_demographic_fairness(
         diagnoses_df,
         demographics_df,
         target_icd,
@@ -42,7 +42,7 @@ def main():
     has_disparity = any(metrics['significant_disparity'] for metrics in disparity_metrics.values())
     
     if has_disparity:
-        print("⚠️ Significant disparities detected in model performance across demographic groups.")
+        print("Significant disparities detected in model performance across demographic groups.")
         
         # Display the specific disparities
         for demo_var, metrics in disparity_metrics.items():
