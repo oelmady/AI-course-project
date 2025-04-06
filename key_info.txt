@@ -1,0 +1,96 @@
+200694 diagnosis records
+223452 patient demographic records
+
+Number of unique patients: 10318
+Number of unique ICD codes: 11080
+
+Top 10 most common diagnoses:
+icd_code
+4019      3463
+I10       3173
+E785      2918
+2724      2142
+Z87891    2042
+K219      1721
+53081     1409
+25000     1294
+F419      1278
+F329      1278
+
+Diagnoses per patient statistics:
+Mean: 19.45
+Median: 12.00
+Min: 1
+Max: 100
+
+Demographics Data Information:
+Number of rows: 223452
+Number of columns: 6
+
+Missing values per column:
+subject_id            0
+gender                0
+insurance          6628
+language            634
+marital_status    10696
+race                  0
+dtype: int64
+
+Distribution of categorical variables:
+gender
+F    117736
+M    105716
+Name: count, dtype: int64
+insurance
+Private      86139
+Medicare     85524
+Medicaid     38022
+Other         6952
+No charge      187
+Name: count, dtype: int64
+language
+English         202713
+Spanish           6783
+Chinese           3369
+Russian           2415
+Kabuverdianu      1750
+Portuguese        1452
+Haitian           1003
+Other              608
+Vietnamese         494
+Arabic             303
+Name: count, dtype: int64
+marital_status
+MARRIED     95614
+SINGLE      82797
+WIDOWED     20226
+DIVORCED    14119
+Name: count, dtype: int64
+race
+WHITE                     147528
+BLACK/AFRICAN AMERICAN     23400
+UNKNOWN                    10352
+ASIAN                       9660
+OTHER                       9469
+HISPANIC/LATINO             8758
+HISPANIC OR LATINO          3223
+UNABLE TO OBTAIN            2610
+BLACK/CAPE VERDEAN          2285
+BLACK/CARIBBEAN ISLAND      1499
+
+##  cross validation to find the best k value for precision-recall tradeoff
+
+k=11 gives the best performance:
+
+- Mean AUC-ROC: 0.865 ± 0.039
+- Mean PR-AUC: 0.584 ± 0.076
+- Mean Accuracy: 0.732 ± 0.047
+- Mean F1 Score: 0.594 ± 0.053
+
+A similarity threshold between 0.12-0.17 gives the best results. 0.15 is a good middle point
+- Mean AUC-ROC: 0.867 ± 0.021
+- Mean PR-AUC: 0.626 ± 0.042
+- Mean Accuracy: 0.755 ± 0.019
+- Mean F1 Score: 0.611 ± 0.020
+
+'''

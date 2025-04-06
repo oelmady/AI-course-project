@@ -4,9 +4,9 @@ import networkx as nx
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from modules.data_loader import sample_patients
+from .data_loader import sample_patients
 
-def create_diagnosis_features(patient_diagnoses, target_icd_code, use_matrix_format, top_n=100):
+def create_diagnosis_features(patient_diagnoses, target_icd_code, use_matrix_format, top_n=200):
     """Create binary features for patient diagnoses using only top N most common diagnoses"""
     print(f"Identifying top {top_n} conditions in patients with {target_icd_code}...")
     
@@ -107,8 +107,6 @@ def build_predictor(diagnoses_df,
         sample_patients_set = target_patients.union(non_target_patients)
         patient_diagnoses = patient_diagnoses[patient_diagnoses['subject_id'].isin(sample_patients_set)]
         
-        print(f"Using a representative sample of {len(patient_diagnoses)} patients")
-    
     # Step 2: Process demographics
     patient_ids = patient_diagnoses['subject_id'].tolist()
     demographics_map = {}
@@ -122,7 +120,7 @@ def build_predictor(diagnoses_df,
     
     # Step 3: Convert diagnoses to binary indicators and calculate similarities
     X, mlb = create_diagnosis_features(
-        patient_diagnoses, target_icd_code, use_matrix_format, top_n=100)
+        patient_diagnoses, target_icd_code, use_matrix_format, top_n=200)
     
     # Step 4: Calculate patient similarities
     print("Computing patient similarities...")
@@ -138,7 +136,6 @@ def build_predictor(diagnoses_df,
 
 def process_demographics(demographics_df, patient_ids, target_patients, non_target_patients):
     """Process demographic features for patients"""
-    print("Processing demographic features...")
     # Get demographics for patients in our dataset
     demo_features = demographics_df[demographics_df['subject_id'].isin(patient_ids)].copy()
     
@@ -174,7 +171,6 @@ def create_patient_network(similarity_matrix, patient_ids, target_patients,
                           similarity_threshold, include_demographics, demographics_map, 
                           cols_to_encode, class_weight, demographic_weight, use_matrix_format):
     """Create a network graph of patients connected by similarities"""
-    print("Building patient similarity network...")
     G = nx.Graph()
     
     # Add nodes (patients)

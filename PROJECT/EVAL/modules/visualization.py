@@ -271,10 +271,6 @@ def plot_fairness_comparison(results, target_icd_code):
             offset = width * (j - 1.5)
             axes[i].bar(x + offset, df[metric], width, label=metric.replace('_', ' ').title(), color=color, alpha=0.7)
         
-        # Add reference line for false negative rate
-        if 'false_neg_rate' in df.columns:
-            axes[i].axhline(y=df['false_neg_rate'].min(), color='red', linestyle='--', alpha=0.5)
-        
         # Set up labels and legend
         axes[i].set_ylabel('Score')
         axes[i].set_title(f'Fairness Metrics by {demo_var.title()} for {target_icd_code}')
@@ -318,8 +314,7 @@ def plot_disparity_heatmap(disparity_metrics, target_icd_code):
     plt.figure(figsize=(10, len(demo_vars) * 1.5 + 2))
     cmap = sns.diverging_palette(10, 133, as_cmap=True)
     
-    sns.heatmap(df, annot=True, cmap=cmap, center=1.0 if 'Disparate Impact' in df.columns else 0,
-               linewidths=0.5, fmt='.2f')
+    sns.heatmap(df, annot=True, cmap=cmap, center=1.0 if 'Disparate Impact' in df.columns else 0,linewidths=0.5, fmt='.2f')
     
     plt.title(f'Fairness Disparity Metrics for {target_icd_code}')
     plt.tight_layout()

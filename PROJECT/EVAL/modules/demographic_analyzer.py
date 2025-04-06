@@ -179,7 +179,8 @@ def analyze_demographic_risk_factors(diagnoses_df, demographics_df, target_icd_c
         print(f"\n{factor.upper()} as a risk factor:")
         for _, row in factor_results.sort_values('prevalence_ratio', ascending=False).iterrows():
             significance = "**" if row['p_value'] < 0.01 else "*" if row['p_value'] < 0.05 else ""
-            print(f"  {row[factor]}: Prevalence={row['prevalence']*100:.2f}%, "
+            if significance != "":
+                print(f"  {row[factor]}: Prevalence={row['prevalence']*100:.2f}%, "
                  f"Ratio={row['prevalence_ratio']:.2f}x{significance}, "
                  f"Count={row['total_count']} (with condition: {row['count_1']})")
     
@@ -246,6 +247,7 @@ def calculate_demographic_metrics(predictions_df, threshold, demographic_columns
                             # Add to results
                             result[f'{demo_col}_{group_value}_fnr'] = group_fnr
                             result[f'{demo_col}_{group_value}_sensitivity'] = group_sensitivity
+                            result[f'{demo_col}_{group_value}_specificity'] = group_specificity
                             result[f'{demo_col}_{group_value}_patients'] = len(group_df)
                     except Exception as e:
                         print(f"Error calculating metrics for {demo_col}={group_value}: {e}")
