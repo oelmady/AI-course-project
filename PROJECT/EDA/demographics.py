@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 # Path to the directory containing the hosp dataset CSV files
-dataset_path = "Data"
+dataset_path = "../Data"
 demographics_path = 'demographics.csv'
 
 # Only perform this processing step if we do not have demographics.csv
@@ -44,6 +44,9 @@ merged_df = pd.merge(patients_df, admissions_df, on='subject_id', how='inner')
 
 # Drop duplicate rows based on subject_id
 merged_df = merged_df.drop_duplicates(subset='subject_id')
+
+# Process race column to remove detailed classifications after " - "
+merged_df['race'] = merged_df['race'].apply(lambda x: x.split(' - ')[0] if isinstance(x, str) and ' - ' in x else x)
 
 # Save the merged DataFrame
 merged_file = os.path.join(dataset_path, demographics_path)

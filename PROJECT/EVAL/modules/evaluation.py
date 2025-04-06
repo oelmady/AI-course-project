@@ -30,6 +30,49 @@ from .demographic_analyzer import (
 from .fairness import calculate_disparity_metrics
 from .visualization import plot_fairness_comparison, plot_disparity_heatmap
     
+    
+def calculate_model_metrics(true_labels, predictions, decision_threshold=0.5):
+    """Calculate all relevant metrics from predictions and labels"""
+    binary_predictions = np.array(predictions) >= decision_threshold
+    
+    metrics = {
+        'auc_roc': roc_auc_score(true_labels, predictions),
+        'accuracy': accuracy_score(true_labels, binary_predictions),
+        'f1': f1_score(true_labels, binary_predictions)
+    }
+    
+    # Add precision-recall metrics
+    precision, recall, _ = precision_recall_curve(true_labels, predictions)
+    metrics['pr_auc'] = auc(recall, precision)
+    
+    # Add confusion matrix metrics
+    tn, fp, fn, tp = confusion_matrix(true_labels, binary_predictions).ravel()
+    metrics['sensitivity'] = tp / (tp + fn) if (tp + fn) > 0 else 0
+    metrics['specificity'] = tn / (tn + fp) if (tn + fp) > 0 else 0
+    metrics['precision'] = tp / (tp + fp) if (tp + fp) > 0 else 0
+    metrics['false_negatives'] = fn
+    metrics['false_positives'] = fp
+    
+    return metrics
+
+def optimized_parallel_predictions(test_patients, G, k, parallel_jobs):
+    """More efficient parallel prediction"""
+    # Create balanced batches
+    batch_size = max(1, len(test_patients) // parallel_jobs)
+    batches = [test_patients[i:i + batch_size] for i in range(0, len(test_patients), batch_size)]
+    
+    # Process in parallel with shared memory for graph
+    with Parallel(n_jobs=parallel_jobs, prefer="threads") as parallel:
+        results = parallel(delayed(process_patient_batch)(batch, G, k) 
+                           for batch in batches)
+    
+    # More efficient dictionary construction
+    predictions_dict = {pid: prob for batch_result in results 
+                       for pid, prob in batch_result}
+    
+    return [predictions_dict.get(pid, 0.0) for pid in test_patients]
+    
+    
 def evaluate_threshold_curve_with_demographics(diagnoses_df, 
                                              demographics_df,
                                              target_icd_code, 
@@ -219,24 +262,8 @@ def diagnosis_evaluation_with_demographics(
         
         # Make predictions using parallel processing for large test sets
         if len(test_patients) > 5000 and parallel_jobs > 1:
-            # Split test patients into batches for parallel processing
-            batch_size = max(1, len(test_patients) // parallel_jobs)
-            batches = [test_patients[i:i + batch_size] for i in range(0, len(test_patients), batch_size)]
-            
-            print(f"  Processing predictions across {len(batches)} batches...")
-            # Process predictions in parallel
-            results = Parallel(n_jobs=parallel_jobs)(
-                delayed(process_patient_batch)(batch, G, k) for batch in batches
-            )
-            
-            # Flatten results
-            predictions_dict = {}
-            for batch_result in results:
-                for patient_id, likelihood in batch_result:
-                    predictions_dict[patient_id] = likelihood
-            
-            # Ensure predictions are in the same order as test_patients
-            predictions = [predictions_dict.get(patient_id, 0.0) for patient_id in test_patients]
+            print(f"  Processing predictions in parallel with {parallel_jobs} workers...")
+            predictions = optimized_parallel_predictions(test_patients, G, k, parallel_jobs)
         else:
             predictions = []
             for patient_id in test_patients:
@@ -244,7 +271,7 @@ def diagnosis_evaluation_with_demographics(
                 predictions.append(likelihood)
         
         # Convert likelihoods to binary predictions
-        binary_predictions = [1 if p >= decision_threshold else 0 for p in predictions]
+        binary_predictions = np.array(all_predictions) >= decision_threshold
         
         # Calculate metrics
         auc_score = roc_auc_score(test_labels, predictions)
@@ -274,7 +301,7 @@ def diagnosis_evaluation_with_demographics(
     print(f"Mean F1 Score: {np.mean(cv_f1_scores):.3f} ± {np.std(cv_f1_scores):.3f}")
     
     # Create binary predictions for classification report
-    binary_predictions = [1 if p >= decision_threshold else 0 for p in all_predictions]
+    binary_predictions = np.array(all_predictions) >= decision_threshold
     
     # Return results in a dictionary
     results = {
@@ -371,6 +398,48 @@ def compare_models_with_without_demographics(diagnoses_df, demographics_df, targ
     plot_roc_comparison(results_without_demographics, results_with_demographics, target_icd_code)
     
     return results_without_demographics, results_with_demographics
+
+def analyze_demographic_group(diagnoses_df, demographics_df, target_icd_code, demo_var, group, sample_size):
+    """Analyze a single demographic group for fairness evaluation"""
+    print(f"\nEvaluating model for {demo_var}={group}")
+    
+    # Get patients in this demographic group
+    group_patients = demographics_df[demographics_df[demo_var] == group]['subject_id']
+    
+    # Filter diagnoses to only these patients
+    group_diagnoses = diagnoses_df[diagnoses_df['subject_id'].isin(group_patients)]
+    
+    # Skip if too few patients
+    if len(group_diagnoses['subject_id'].unique()) < 100:
+        print(f"  Too few patients with {demo_var}={group}, skipping")
+        return None
+        
+    # Run stratified evaluation
+    threshold_results = evaluate_threshold_curve_with_demographics(
+        group_diagnoses,
+        demographics_df,
+        target_icd_code,
+        k=10,
+        sample_size=min(sample_size, len(group_diagnoses['subject_id'].unique())),
+        demographic_group=(demo_var, group),
+        include_demographics=False  # We're already filtering by demographic
+    )
+    
+    # Store optimal threshold results
+    optimal_threshold = threshold_results.loc[threshold_results['f1'].idxmax()]
+    result = {
+        'sensitivity': optimal_threshold['sensitivity'],
+        'specificity': optimal_threshold['specificity'],
+        'precision': optimal_threshold['precision'],
+        'f1': optimal_threshold['f1'],
+        'false_neg_rate': optimal_threshold['false_negatives'] / 
+                        (optimal_threshold['false_negatives'] + 
+                         (optimal_threshold['precision'] * optimal_threshold['false_positives'] / 
+                          (1 - optimal_threshold['precision']) if optimal_threshold['precision'] < 1 else 0)),
+        'optimal_threshold': optimal_threshold['threshold']
+    }
+    
+    return (group, result)
 
 def evaluate_demographic_fairness(diagnoses_df, demographics_df, target_icd_code, sample_size=3000):
     """

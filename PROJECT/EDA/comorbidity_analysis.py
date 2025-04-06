@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-diagnoses_path = "Data/diagnoses_icd.csv"
+diagnoses_path = "../Data/diagnoses_icd.csv"
 
 def analyze_comorbidities_and_demographics(icd_category):
     """

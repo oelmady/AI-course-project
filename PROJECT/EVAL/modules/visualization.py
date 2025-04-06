@@ -212,14 +212,18 @@ def plot_roc_comparison(results_without_demographics, results_with_demographics,
     plt.figure(figsize=(10, 6))
     
     # Without demographics
-    fpr1, tpr1, _ = roc_curve(results_without_demographics['true_labels'], 
-                            results_without_demographics['predictions'])
+    fpr1, tpr1, _ = roc_curve(
+        results_without_demographics['true_labels'], 
+        results_without_demographics['predictions'])
+    
     plt.plot(fpr1, tpr1, 'b-', 
              label=f'Without Demographics (AUC = {results_without_demographics["auc_roc"]:.3f})')
     
     # With demographics
-    fpr2, tpr2, _ = roc_curve(results_with_demographics['true_labels'], 
-                            results_with_demographics['predictions'])
+    fpr2, tpr2, _ = roc_curve(
+        results_with_demographics['true_labels'], 
+        results_with_demographics['predictions'])
+    
     plt.plot(fpr2, tpr2, 'r-', 
              label=f'With Demographics (AUC = {results_with_demographics["auc_roc"]:.3f})')
     

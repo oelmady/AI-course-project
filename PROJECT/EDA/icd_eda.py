@@ -3,7 +3,7 @@
 import pandas as pd
 
 # Load the diagnoses_icd file
-diagnoses_icd = pd.read_csv('Data/diagnoses_icd.csv')
+diagnoses_icd = pd.read_csv('../Data/diagnoses_icd.csv')
 
 # Keep the category for reference
 diagnoses_icd['icd_category'] = diagnoses_icd['icd_code'].str[:3]
