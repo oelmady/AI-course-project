@@ -20,7 +20,7 @@ def main():
     
     # Example target diagnosis (hypertension)
     target_icd = "I10"
-    
+
     # Analyze demographic risk factors
     analyze_demographic_risk_factors(diagnoses_df, demographics_df, target_icd)
     

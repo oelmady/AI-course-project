@@ -5,7 +5,7 @@ def load_diagnoses_data(dataset_path="../../PROJECT/Data"):
     """Load diagnoses data and return as DataFrame"""
     diagnoses_path = os.path.join(dataset_path, "diagnoses_icd.csv")
     if os.path.exists(diagnoses_path):
-        diagnoses_df = pd.read_csv(diagnoses_path)
+        diagnoses_df = pd.read_csv(diagnoses_path, cache=False)
         print(f"Loaded diagnoses data with {len(diagnoses_df)} records")
         return diagnoses_df
     else:
@@ -15,7 +15,7 @@ def load_demographics_data(dataset_path="../../PROJECT/Data"):
     """Load demographics data and return as DataFrame"""
     demographics_path = os.path.join(dataset_path, "demographics.csv")
     if os.path.exists(demographics_path):
-        df = pd.read_csv(demographics_path)
+        df = pd.read_csv(demographics_path, cache=False)
         print(f"Loaded demographics data with {len(df)} records and {len(df.columns)} features")
         return df
     else:
