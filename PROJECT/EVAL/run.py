@@ -18,22 +18,9 @@ def main():
     diagnoses_df = load_diagnoses_data()
     demographics_df = load_demographics_data()
     
-    # Example target diagnosis (hypertension)
-    target_icd = "I10"
+    # Mental health diagnosis
+    target_icd = "F30"
 
-    # Analyze demographic risk factors
-    analyze_demographic_risk_factors(diagnoses_df, demographics_df, target_icd)
-    
-    # Evaluate threshold curve
-    evaluate_threshold_curve_with_demographics(
-        diagnoses_df,
-        demographics_df,
-        target_icd,
-        k=11,
-        sample_size=2000
-    )
-    
-    # Compare models with and without demographics
     compare_models_with_without_demographics(
         diagnoses_df,
         demographics_df,
@@ -41,18 +28,16 @@ def main():
         k=11,
         n_folds=5,
         similarity_threshold=0.15,
-        sample_size=2000,
+        sample_size=5000,
         parallel_jobs=-1
     )
     
-    # Example: Analyze specific demographic subgroup
     evaluate_threshold_curve_with_demographics(
         diagnoses_df,
         demographics_df,
         target_icd,
         k=11,
-        sample_size=2000,
-        demographic_group=('gender', 'F')  # Female patients
+        sample_size=5000
     )
 
 if __name__ == "__main__":

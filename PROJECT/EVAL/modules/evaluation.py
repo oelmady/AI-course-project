@@ -390,7 +390,7 @@ def evaluate_demographic_fairness(diagnoses_df, demographics_df, target_icd_code
     
     # Get demographic distributions
     demo_counts = {}
-    for col in ['gender', 'race', 'insurance', 'language']:
+    for col in ['gender', 'race', 'insurance']:
         if col in demographics_df.columns:
             counts = demographics_df[col].value_counts()
             total = counts.sum()

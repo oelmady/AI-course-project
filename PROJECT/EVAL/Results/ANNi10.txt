@@ -1,0 +1,304 @@
+cd /Users/omarelmady/School/AI/project/PROJECT/EVAL
+/usr/local/bin/python3 -i /Users/omarelmady/School/AI/project/PROJECT/EVAL/eval.py
+➜  project git:(main) ✗ cd /Users/omarelmady/School/AI/project/PROJECT/EVAL
+➜  EVAL git:(main) ✗ /usr/local/bin/python3 -i /Users/omarelmady/School/AI/project/PROJECT
+/EVAL/eval.py
+Loaded diagnoses data with 200694 records
+Loaded demographics data with 223452 records and 6 features
+Overall prevalence: 0.0099 (2203/223452)
+
+Demographic Risk Factor Analysis for I10:
+
+GENDER as a risk factor:
+  M: Prevalence=1.05%, Ratio=1.07x**, Count=105716 (with condition: 1114)
+  F: Prevalence=0.92%, Ratio=0.94x**, Count=117736 (with condition: 1089)
+
+INSURANCE as a risk factor:
+  Medicare: Prevalence=1.36%, Ratio=1.38x**, Count=85524 (with condition: 1162)
+  Medicaid: Prevalence=0.86%, Ratio=0.87x**, Count=38022 (with condition: 326)
+  Private: Prevalence=0.74%, Ratio=0.75x**, Count=86139 (with condition: 641)
+  Other: Prevalence=0.62%, Ratio=0.63x**, Count=6952 (with condition: 43)
+
+RACE as a risk factor:
+  BLACK/CARIBBEAN ISLAND: Prevalence=1.80%, Ratio=1.83x**, Count=1499 (with condition: 27)
+  WHITE - OTHER EUROPEAN: Prevalence=1.71%, Ratio=1.74x**, Count=5717 (with condition: 98)
+  WHITE - RUSSIAN: Prevalence=1.57%, Ratio=1.60x**, Count=2032 (with condition: 32)
+  UNKNOWN: Prevalence=1.22%, Ratio=1.23x*, Count=10352 (with condition: 126)
+  ASIAN: Prevalence=0.60%, Ratio=0.61x*, Count=4302 (with condition: 26)
+  HISPANIC OR LATINO: Prevalence=0.16%, Ratio=0.16x**, Count=3223 (with condition: 5)
+
+LANGUAGE as a risk factor:
+  Amharic: Prevalence=5.77%, Ratio=5.85x**, Count=104 (with condition: 6)
+  Korean: Prevalence=3.12%, Ratio=3.17x*, Count=160 (with condition: 5)
+  Haitian: Prevalence=1.69%, Ratio=1.72x*, Count=1003 (with condition: 17)
+  Kabuverdianu: Prevalence=1.60%, Ratio=1.62x*, Count=1750 (with condition: 28)
+  Portuguese: Prevalence=1.58%, Ratio=1.61x*, Count=1452 (with condition: 23)
+  Russian: Prevalence=1.41%, Ratio=1.43x*, Count=2415 (with condition: 34)
+  English: Prevalence=0.95%, Ratio=0.96x**, Count=202713 (with condition: 1928)
+
+MARITAL_STATUS as a risk factor:
+  WIDOWED: Prevalence=1.38%, Ratio=1.40x**, Count=20226 (with condition: 279)
+  MARRIED: Prevalence=1.15%, Ratio=1.16x**, Count=95614 (with condition: 1097)
+  SINGLE: Prevalence=0.68%, Ratio=0.69x**, Count=82797 (with condition: 561)
+Evaluating threshold curve for I10 with demographic analysis...
+Building prediction model for ICD code: I10
+Including demographic features in similarity calculation
+Patients with I10 diagnosis: 2203
+Patients without I10 diagnosis: 8115
+Identifying top 200 conditions in patients with I10...
+Selected 201 conditions (including target)
+Computing patient similarities...
+Adding edges to patient network...
+Network built with 5000 patients and 1,383,891 connections
+
+Performance across decision thresholds:
+   threshold  sensitivity  specificity  precision     f1  false_negatives  false_positives
+0        0.1        0.935        0.660      0.427  0.586               69             1339
+1        0.2        0.934        0.660      0.427  0.586               70             1338
+2        0.3        0.862        0.735      0.469  0.607              147             1042
+3        0.4        0.814        0.766      0.486  0.609              198              919
+4        0.5        0.771        0.789      0.498  0.606              244              828
+5        0.6        0.674        0.840      0.534  0.596              348              628
+6        0.7        0.547        0.884      0.561  0.554              483              457
+7        0.8        0.294        0.958      0.653  0.406              753              167
+8        0.9        0.062        0.994      0.733  0.114             1001               24
+
+=== Comparing Models With and Without Demographics for I10 ===
+
+
+** Running Model WITHOUT Demographics **
+
+=== Comprehensive Evaluation with Demographics for ICD code: I10 ===
+Building prediction model for ICD code: I10
+Patients with I10 diagnosis: 2203
+Patients without I10 diagnosis: 8115
+Identifying top 200 conditions in patients with I10...
+Selected 201 conditions (including target)
+Computing patient similarities...
+Adding edges to patient network...
+Network built with 5000 patients and 1850809 connections
+
+=== Overall Results ===
+Mean AUC-ROC: 0.861 ± 0.005
+Mean PR-AUC: 0.583 ± 0.034
+Mean Accuracy: 0.767 ± 0.010
+Mean F1 Score: 0.615 ± 0.012
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.96      0.74      0.83      3933
+           1       0.47      0.87      0.61      1067
+
+    accuracy                           0.77      5000
+   macro avg       0.72      0.81      0.72      5000
+weighted avg       0.85      0.77      0.79      5000
+
+
+Analyzing error patterns across demographic groups...
+Analyzing errors across 5000 patients with demographic data
+
+=== Error Analysis by Demographic Groups ===
+
+GENDER
+  M: Error Rate=0.220, FNR=0.209, FPR=0.223, Count=2328
+  F: Error Rate=0.201, FNR=0.259, FPR=0.186, Count=2672
+
+INSURANCE
+  Medicare: Error Rate=0.270, FNR=0.191, FPR=0.304, Count=1946
+  Medicaid: Error Rate=0.205, FNR=0.295, FPR=0.184, Count=850
+  Other: Error Rate=0.178, FNR=0.400, FPR=0.153, Count=152
+  Private: Error Rate=0.159, FNR=0.273, FPR=0.138, Count=1904
+
+RACE
+  UNABLE TO OBTAIN: Error Rate=0.357, FNR=0.400, FPR=0.348, Count=56
+  WHITE - OTHER EUROPEAN: Error Rate=0.333, FNR=0.167, FPR=0.444, Count=105
+  PORTUGUESE: Error Rate=0.333, FNR=0.250, FPR=0.375, Count=12
+  BLACK/AFRICAN: Error Rate=0.303, FNR=0.333, FPR=0.296, Count=33
+  UNKNOWN: Error Rate=0.291, FNR=0.121, FPR=0.344, Count=247
+  WHITE - RUSSIAN: Error Rate=0.289, FNR=0.143, FPR=0.375, Count=38
+  HISPANIC/LATINO - DOMINICAN: Error Rate=0.273, FNR=0.375, FPR=0.250, Count=44
+  HISPANIC/LATINO - MEXICAN: Error Rate=0.250, FNR=0.333, FPR=0.000, Count=4
+  ASIAN - CHINESE: Error Rate=0.247, FNR=0.462, FPR=0.203, Count=77
+  BLACK/CARIBBEAN ISLAND: Error Rate=0.244, FNR=0.294, FPR=0.208, Count=41
+  BLACK/AFRICAN AMERICAN: Error Rate=0.230, FNR=0.359, FPR=0.185, Count=496
+  HISPANIC/LATINO - PUERTO RICAN: Error Rate=0.230, FNR=0.412, FPR=0.175, Count=74
+  OTHER: Error Rate=0.208, FNR=0.190, FPR=0.212, Count=202
+  SOUTH AMERICAN: Error Rate=0.200, FNR=0.000, FPR=0.250, Count=5
+  AMERICAN INDIAN/ALASKA NATIVE: Error Rate=0.200, FNR=0.000, FPR=0.214, Count=15
+  ASIAN - KOREAN: Error Rate=0.200, FNR=0.000, FPR=0.222, Count=10
+  HISPANIC/LATINO - GUATEMALAN: Error Rate=0.200, FNR=0.500, FPR=0.167, Count=20
+  WHITE: Error Rate=0.197, FNR=0.214, FPR=0.193, Count=3150
+  ASIAN: Error Rate=0.176, FNR=0.333, FPR=0.161, Count=102
+  BLACK/CAPE VERDEAN: Error Rate=0.172, FNR=0.250, FPR=0.152, Count=58
+  HISPANIC/LATINO - CUBAN: Error Rate=0.167, FNR=0.500, FPR=0.000, Count=6
+  HISPANIC/LATINO - SALVADORAN: Error Rate=0.167, FNR=0.000, FPR=0.200, Count=12
+  PATIENT DECLINED TO ANSWER: Error Rate=0.167, FNR=0.000, FPR=0.208, Count=30
+  ASIAN - SOUTH EAST ASIAN: Error Rate=0.158, FNR=0.250, FPR=0.133, Count=19
+  ASIAN - ASIAN INDIAN: Error Rate=0.158, FNR=0.250, FPR=0.133, Count=19
+  WHITE - EASTERN EUROPEAN: Error Rate=0.100, FNR=0.500, FPR=0.000, Count=10
+  WHITE - BRAZILIAN: Error Rate=0.062, FNR=0.000, FPR=0.077, Count=16
+  HISPANIC OR LATINO: Error Rate=0.039, FNR=0.500, FPR=0.027, Count=76
+  HISPANIC/LATINO - COLUMBIAN: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=5
+  HISPANIC/LATINO - CENTRAL AMERICAN: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=4
+
+LANGUAGE
+  Persian: Error Rate=0.400, FNR=0.000, FPR=0.500, Count=5
+  Haitian: Error Rate=0.385, FNR=0.125, FPR=0.500, Count=26
+  Portuguese: Error Rate=0.312, FNR=0.200, FPR=0.364, Count=32
+  Vietnamese: Error Rate=0.273, FNR=0.000, FPR=0.333, Count=11
+  Spanish: Error Rate=0.241, FNR=0.333, FPR=0.215, Count=137
+  Chinese: Error Rate=0.233, FNR=0.471, FPR=0.174, Count=86
+  Other: Error Rate=0.222, FNR=0.200, FPR=0.231, Count=18
+  Russian: Error Rate=0.217, FNR=0.267, FPR=0.194, Count=46
+  Kabuverdianu: Error Rate=0.213, FNR=0.214, FPR=0.212, Count=47
+  English: Error Rate=0.208, FNR=0.230, FPR=0.202, Count=4524
+  Modern Greek (1453-): Error Rate=0.200, FNR=0.333, FPR=0.143, Count=10
+  Arabic: Error Rate=0.083, FNR=0.200, FPR=0.000, Count=12
+  American Sign Language: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=3
+  Korean: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=5
+  Polish: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=6
+
+MARITAL_STATUS
+  WIDOWED: Error Rate=0.280, FNR=0.248, FPR=0.292, Count=483
+  DIVORCED: Error Rate=0.231, FNR=0.267, FPR=0.218, Count=320
+  MARRIED: Error Rate=0.209, FNR=0.202, FPR=0.211, Count=2133
+  SINGLE: Error Rate=0.168, FNR=0.285, FPR=0.149, Count=1830
+
+** Running Model WITH Demographics **
+
+=== Comprehensive Evaluation with Demographics for ICD code: I10 ===
+Building prediction model for ICD code: I10
+Including demographic features in similarity calculation
+Patients with I10 diagnosis: 2203
+Patients without I10 diagnosis: 8115
+Identifying top 200 conditions in patients with I10...
+Selected 201 conditions (including target)
+Computing patient similarities...
+Adding edges to patient network...
+Network built with 5000 patients and 1729361 connections
+
+=== Overall Results ===
+Mean AUC-ROC: 0.847 ± 0.005
+Mean PR-AUC: 0.549 ± 0.020
+Mean Accuracy: 0.753 ± 0.005
+Mean F1 Score: 0.601 ± 0.006
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.95      0.72      0.82      3933
+           1       0.46      0.87      0.60      1067
+
+    accuracy                           0.75      5000
+   macro avg       0.71      0.80      0.71      5000
+weighted avg       0.85      0.75      0.77      5000
+
+
+Analyzing error patterns across demographic groups...
+Analyzing errors across 5000 patients with demographic data
+
+=== Error Analysis by Demographic Groups ===
+
+GENDER
+  M: Error Rate=0.241, FNR=0.174, FPR=0.261, Count=2358
+  F: Error Rate=0.205, FNR=0.241, FPR=0.196, Count=2642
+
+INSURANCE
+  Medicare: Error Rate=0.281, FNR=0.129, FPR=0.347, Count=1856
+  Medicaid: Error Rate=0.231, FNR=0.304, FPR=0.214, Count=873
+  Other: Error Rate=0.188, FNR=0.111, FPR=0.197, Count=165
+  Private: Error Rate=0.170, FNR=0.303, FPR=0.145, Count=1972
+
+RACE
+  SOUTH AMERICAN: Error Rate=0.600, FNR=0.500, FPR=0.667, Count=5
+  HISPANIC/LATINO - MEXICAN: Error Rate=0.429, FNR=0.500, FPR=0.400, Count=7
+  ASIAN - SOUTH EAST ASIAN: Error Rate=0.381, FNR=0.500, FPR=0.308, Count=21
+  WHITE - OTHER EUROPEAN: Error Rate=0.363, FNR=0.149, FPR=0.545, Count=102
+  UNKNOWN: Error Rate=0.352, FNR=0.143, FPR=0.420, Count=230
+  BLACK/AFRICAN: Error Rate=0.344, FNR=0.375, FPR=0.333, Count=32
+  WHITE - RUSSIAN: Error Rate=0.343, FNR=0.182, FPR=0.417, Count=35
+  HISPANIC/LATINO - CENTRAL AMERICAN: Error Rate=0.333, FNR=0.000, FPR=0.500, Count=3
+  HISPANIC/LATINO - COLUMBIAN: Error Rate=0.333, FNR=0.000, FPR=0.667, Count=6
+  BLACK/CARIBBEAN ISLAND: Error Rate=0.324, FNR=0.400, FPR=0.273, Count=37
+  PORTUGUESE: Error Rate=0.312, FNR=0.333, FPR=0.308, Count=16
+  HISPANIC/LATINO - GUATEMALAN: Error Rate=0.312, FNR=0.500, FPR=0.286, Count=16
+  AMERICAN INDIAN/ALASKA NATIVE: Error Rate=0.308, FNR=0.500, FPR=0.273, Count=13
+  HISPANIC/LATINO - SALVADORAN: Error Rate=0.308, FNR=0.000, FPR=0.333, Count=13
+  UNABLE TO OBTAIN: Error Rate=0.279, FNR=0.100, FPR=0.314, Count=61
+  ASIAN - CHINESE: Error Rate=0.257, FNR=0.231, FPR=0.263, Count=70
+  BLACK/AFRICAN AMERICAN: Error Rate=0.252, FNR=0.262, FPR=0.249, Count=528
+  WHITE: Error Rate=0.211, FNR=0.205, FPR=0.212, Count=3120
+  HISPANIC/LATINO - DOMINICAN: Error Rate=0.209, FNR=0.000, FPR=0.273, Count=43
+  WHITE - EASTERN EUROPEAN: Error Rate=0.200, FNR=0.667, FPR=0.083, Count=15
+  OTHER: Error Rate=0.190, FNR=0.205, FPR=0.186, Count=216
+  BLACK/CAPE VERDEAN: Error Rate=0.182, FNR=0.125, FPR=0.200, Count=66
+  HISPANIC/LATINO - PUERTO RICAN: Error Rate=0.182, FNR=0.200, FPR=0.175, Count=77
+  ASIAN - ASIAN INDIAN: Error Rate=0.167, FNR=0.000, FPR=0.182, Count=12
+  PATIENT DECLINED TO ANSWER: Error Rate=0.143, FNR=0.000, FPR=0.174, Count=28
+  ASIAN: Error Rate=0.078, FNR=0.083, FPR=0.078, Count=102
+  WHITE - BRAZILIAN: Error Rate=0.050, FNR=0.000, FPR=0.062, Count=20
+  HISPANIC OR LATINO: Error Rate=0.025, FNR=1.000, FPR=0.013, Count=79
+  ASIAN - KOREAN: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=8
+  HISPANIC/LATINO - CUBAN: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=6
+  MULTIPLE RACE/ETHNICITY: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=5
+
+LANGUAGE
+  Vietnamese: Error Rate=0.455, FNR=0.200, FPR=0.667, Count=11
+  Haitian: Error Rate=0.444, FNR=0.167, FPR=0.583, Count=18
+  Modern Greek (1453-): Error Rate=0.429, FNR=0.333, FPR=0.500, Count=7
+  Russian: Error Rate=0.350, FNR=0.267, FPR=0.400, Count=40
+  Spanish: Error Rate=0.255, FNR=0.119, FPR=0.308, Count=149
+  Chinese: Error Rate=0.250, FNR=0.300, FPR=0.232, Count=76
+  Portuguese: Error Rate=0.231, FNR=0.091, FPR=0.286, Count=39
+  English: Error Rate=0.219, FNR=0.213, FPR=0.221, Count=4524
+  Khmer: Error Rate=0.200, FNR=0.000, FPR=0.250, Count=5
+  Arabic: Error Rate=0.200, FNR=0.500, FPR=0.125, Count=10
+  Italian: Error Rate=0.167, FNR=0.333, FPR=0.000, Count=6
+  American Sign Language: Error Rate=0.167, FNR=0.000, FPR=0.250, Count=6
+  Other: Error Rate=0.150, FNR=0.000, FPR=0.200, Count=20
+  Kabuverdianu: Error Rate=0.143, FNR=0.059, FPR=0.188, Count=49
+  Korean: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=3
+  Amharic: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=4
+  Polish: Error Rate=0.000, FNR=0.000, FPR=0.000, Count=4
+
+MARITAL_STATUS
+  WIDOWED: Error Rate=0.264, FNR=0.143, FPR=0.316, Count=443
+  DIVORCED: Error Rate=0.257, FNR=0.246, FPR=0.260, Count=300
+  MARRIED: Error Rate=0.234, FNR=0.172, FPR=0.254, Count=2173
+  SINGLE: Error Rate=0.176, FNR=0.301, FPR=0.153, Count=1849
+
+=== Performance Comparison ===
+AUC_ROC: Without demographics: 0.861, With demographics: 0.847
+Difference: -0.014 (-1.6%)
+PR_AUC: Without demographics: 0.583, With demographics: 0.549
+Difference: -0.035 (-6.0%)
+ACCURACY: Without demographics: 0.767, With demographics: 0.753
+Difference: -0.014 (-1.8%)
+F1_SCORE: Without demographics: 0.615, With demographics: 0.601
+Difference: -0.014 (-2.3%)
+Evaluating threshold curve for I10 with demographic analysis...
+Building prediction model for ICD code: I10
+Including demographic features in similarity calculation
+Patients with I10 diagnosis: 2203
+Patients without I10 diagnosis: 8115
+Identifying top 200 conditions in patients with I10...
+Selected 201 conditions (including target)
+Computing patient similarities...
+Adding edges to patient network...
+Network built with 5000 patients and 1369364 connections
+Analyzing threshold curve for demographic group: gender=F
+Group size: 2647 patients
+
+Performance across decision thresholds:
+   threshold  sensitivity  specificity  precision     f1  false_negatives  false_positives
+0        0.1        0.921        0.674      0.410  0.567               41              693
+1        0.2        0.921        0.675      0.410  0.568               41              691
+2        0.3        0.843        0.758      0.461  0.596               82              514
+3        0.4        0.793        0.795      0.487  0.603              108              436
+4        0.5        0.749        0.815      0.498  0.598              131              394
+5        0.6        0.623        0.863      0.528  0.571              197              291
+6        0.7        0.498        0.906      0.566  0.530              262              199
+7        0.8        0.216        0.966      0.608  0.319              409               73
+8        0.9        0.034        0.993      0.562  0.065              504               14
+>>> 
